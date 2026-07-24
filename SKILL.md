@@ -139,15 +139,19 @@ promoted. Taste is the pattern, not every stray comment.
 
 ## 6. COMMANDS
 
-- `/taste new <slug>` - scaffold a new project profile (copies `_template`).
-- `/taste use <slug>` - set the active project.
-- `/taste moodboard` - re-ingest the active project's moodboard images.
-- `/taste learn "<note>"` - append a correction to the journal.
-- `/taste distill` - harden recurring journal entries into rules now.
-- `/taste status` - show active slug, layer counts, undistilled entry count.
+The slash command is `/ts`. One command, short:
 
-The `scripts/` directory has bash equivalents (`new-project.sh`, `set-active.sh`,
-`learn.sh`, `status.sh`) for use outside a Claude session.
+- `/ts <slug>` - create-or-activate a project in one shot (creates it the first
+  time you name it, switches to it every time after). This is the common path.
+- `/ts` - status (active slug, layer counts, undistilled entries).
+- `/ts learn "<note>"` - append a correction to the journal.
+- `/ts mood` - re-ingest the active project's moodboard images.
+- `/ts distill` - harden recurring journal entries into rules now.
+
+Reserved words (`learn mood moodboard distill status use new`) cannot be project
+slugs. The `scripts/` directory has bash equivalents (`use.sh`, `learn.sh`,
+`status.sh`, and the lower-level `new-project.sh` / `set-active.sh`) for use outside
+a Claude session.
 
 ---
 

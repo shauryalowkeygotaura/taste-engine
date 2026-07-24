@@ -86,22 +86,25 @@ Restart Claude Code so it picks up the skill.
 
 ## Usage
 
-In a Claude Code session:
+In a Claude Code session the command is `/ts`. One command, short:
 
 | Command | What it does |
 |---|---|
-| `/taste new <slug>` | scaffold a new project profile |
-| `/taste use <slug>` | set the active project |
-| `/taste moodboard` | (re)ingest the active project's moodboard |
-| `/taste learn "<note>"` | log a correction to the journal |
-| `/taste distill` | harden recurring corrections into rules |
-| `/taste status` | active slug, layer counts, undistilled notes |
+| `/ts <slug>` | create-or-activate a project (creates the first time, switches after) |
+| `/ts` | status: active slug, layer counts, undistilled notes |
+| `/ts learn "<note>"` | log a correction to the journal |
+| `/ts mood` | (re)ingest the active project's moodboard |
+| `/ts distill` | harden recurring corrections into rules |
+
+`/ts marrow` is the whole create-and-switch flow, so there is no separate "new"
+step. Reserved words (`learn mood moodboard distill status use new`) cannot be
+project slugs. Prefer a different prefix? Rename `commands/ts.md` to
+`commands/<yourword>.md`.
 
 Outside a session, the same actions exist as scripts:
 
 ```bash
-scripts/new-project.sh marrow
-scripts/set-active.sh marrow
+scripts/use.sh marrow          # create-or-activate in one shot
 # drop images into profiles/marrow/moodboard/
 scripts/learn.sh "accent should be terracotta, not brass"
 scripts/status.sh
@@ -127,6 +130,7 @@ taste-engine/
       taste-dna.md             extracted from the moodboard
       journal.md               correction log (append-only)
       moodboard/               drop reference images here (gitignored)
+  commands/ts.md               the /ts slash command
   scripts/                     bash equivalents of the slash commands
   hooks/                       optional Stop-hook example
   install.sh
