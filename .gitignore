@@ -1,0 +1,15 @@
+# local active-project pointer (per machine, not shared)
+profiles/.active
+
+# moodboard source images are NOT published (may be copyrighted references).
+# the extracted text taste-dna.md IS committed; the images are not.
+profiles/**/moodboard/*
+!profiles/**/moodboard/.gitkeep
+
+# installed skill pointer, if generated inside the repo
+.taste-root
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+*.swp
