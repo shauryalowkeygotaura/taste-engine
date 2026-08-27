@@ -7,7 +7,7 @@ slug="$(require_slug "${1:-}")"
 
 # reserved words that are subcommands, not project names
 case "$slug" in
-  learn|mood|moodboard|distill|status|use|new)
+  learn|mood|moodboard|distill|status|use|new|pin|pinterest)
     echo "error: '$slug' is a reserved word, not a project slug" >&2
     exit 1 ;;
 esac

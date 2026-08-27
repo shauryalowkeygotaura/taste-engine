@@ -1,6 +1,6 @@
 ---
-description: taste-engine — set the active per-project taste, log corrections, ingest a moodboard, or distill rules
-argument-hint: "[slug] | learn \"note\" | mood | distill  (empty = status)"
+description: taste-engine control command. Set the active per-project taste, log corrections, ingest a moodboard, pull a Pinterest board, or distill rules
+argument-hint: "[slug] | learn \"note\" | mood | pin <board-url> | distill  (empty = status)"
 allowed-tools: Bash, Read, Edit, Write, Glob
 ---
 
@@ -24,6 +24,15 @@ taste-engine clone and stop.
   taste-engine SKILL.md for the ACTIVE project: read each new image in the active
   project's `moodboard/` with vision, sample the palette, and rewrite `taste-dna.md`.
   Report the extracted palette + vibe in 2 lines.
+
+- **starts with `pin ` or `pinterest `** -> everything after it is a Pinterest
+  board URL (or `user/board`). Run `scripts/pinterest.sh "<target>"`. If it exits
+  2 on the robots.txt gate, relay its message verbatim and STOP; do not route
+  around it. On success it has dropped ordinary images into the active project's
+  `moodboard/`, so continue straight into the `mood` behaviour above, and add the
+  board title it printed to `taste-dna.md` under `## Named references` as
+  `- <board title> (pinterest board)`. Report the palette, vibe, and pin count in
+  2 lines.
 
 - **`distill`** -> follow section 5 (DISTILL) of the SKILL.md for the active project:
   cluster undistilled journal entries, promote recurring patterns into `profile.md`

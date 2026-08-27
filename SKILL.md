@@ -74,6 +74,39 @@ Before building, check `PROFILES_ROOT/<slug>/moodboard/` for image files
 
 Re-run this any time with `/ts mood`.
 
+### 2a. Filling the moodboard from Pinterest
+
+Pinterest is not a second kind of taste source. It is a way to FILL the same
+moodboard folder, so everything downstream (vision, taste-dna, the cascade) is
+unchanged. Never invent a separate Pinterest vocabulary or a separate DNA file.
+
+On `/ts pin <board-url>`:
+
+1. Run `scripts/pinterest.sh <board-url> [slug]`. It reads the board's public
+   `.rss` feed, downloads up to `TASTE_PINTEREST_MAX_PINS` images (default 24) at
+   736px into `PROFILES_ROOT/<slug>/moodboard/` as `pin-<pinid>.jpg`, and appends
+   provenance to `<slug>/moodboard-sources.md` (gitignored, like the images).
+2. If it exits 2 on the robots.txt gate, relay its message verbatim and STOP. Do
+   not work around it, do not switch to scraping the HTML page, and do not
+   suggest a saved-session cookie. The user decides, once, by exporting
+   `TASTE_PINTEREST_ACK_ROBOTS=1`.
+3. Then run the normal section 2 ingestion over the new files. They are ordinary
+   moodboard images from here on.
+4. The script prints a **style label** (the board's own title, e.g. "Neo
+   brutalist websites"). Carry it into `taste-dna.md` under
+   `## Named references` as `- <board title> (pinterest board)`. It is the one
+   piece of design signal the feed gives you that the pixels do not.
+
+Caveats to state honestly rather than paper over:
+
+- A public feed returns roughly the 25 most recent pins, not the whole board. A
+  400-pin board gives you its newest 25. Re-running pulls further down the feed
+  as it changes; it is a sample, not a mirror.
+- Private and secret boards have no public feed at all. There is no fallback.
+- Pins are other people's images. They are reference material for extraction, the
+  same as any screenshot dragged in by hand, and section 7's rule applies: the
+  images stay local, only the derived text is committed.
+
 ---
 
 ## 3. THE TASTE READ (before any code)
@@ -150,12 +183,14 @@ The slash command is `/ts`. One command, short:
 - `/ts` - status (active slug, layer counts, undistilled entries).
 - `/ts learn "<note>"` - append a correction to the journal.
 - `/ts mood` - re-ingest the active project's moodboard images.
+- `/ts pin <board-url>` - pull a public Pinterest board into the moodboard, then
+  ingest it (section 2a).
 - `/ts distill` - harden recurring journal entries into rules now.
 
-Reserved words (`learn mood moodboard distill status use new`) cannot be project
-slugs. The `scripts/` directory has bash equivalents (`use.sh`, `learn.sh`,
-`status.sh`, and the lower-level `new-project.sh` / `set-active.sh`) for use outside
-a Claude session.
+Reserved words (`learn mood moodboard distill status use new pin pinterest`)
+cannot be project slugs. The `scripts/` directory has bash equivalents (`use.sh`,
+`learn.sh`, `status.sh`, `pinterest.sh`, and the lower-level `new-project.sh` /
+`set-active.sh`) for use outside a Claude session.
 
 ---
 
