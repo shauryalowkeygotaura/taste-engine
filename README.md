@@ -49,7 +49,7 @@ active), then builds to it.
 profiles/<project>/moodboard/   <- drop ref images here (png/jpg/webp/gif)
 ```
 
-Run `/taste moodboard` (or start a design task) and Claude reads each new image,
+Run `/ts mood` (or start a design task) and Claude reads each new image,
 samples the real palette, and writes `taste-dna.md`. Source images are gitignored
 by default, since references are often copyrighted; the extracted text is what
 travels with the repo.
@@ -67,7 +67,7 @@ Every aesthetic correction lands in the project journal:
 - distilled: no
 ```
 
-When a pattern repeats (default: 2 matching entries), `/taste distill` promotes it
+When a pattern repeats (default: 2 matching entries), `/ts distill` promotes it
 into `profile.md` under **Hardened Rules**, with newer feedback overriding older.
 One-off nitpicks stay in the journal and never harden. The journal is append-only,
 so you keep a full audit trail of how the taste evolved.
@@ -83,6 +83,37 @@ bash install.sh          # copies the skill into ~/.claude/skills, points it bac
 ```
 
 Restart Claude Code so it picks up the skill.
+
+### Optional: the Stop hook
+
+Distilling only helps if you remember to do it. The optional Stop hook counts the
+journal entries still marked `distilled: no` at the end of each session and prints
+one line once there are enough of them to actually harden a rule:
+
+```
+taste-engine: 3 undistilled correction(s) waiting (_global 2, marrow 1). Run /ts distill to harden the repeats.
+```
+
+Below the threshold it prints nothing, so it does not tax every session you run.
+
+```bash
+bash hooks/install-hook.sh              # add it (or refresh the path after a move)
+bash hooks/install-hook.sh --uninstall  # take it back out
+bash install.sh --with-hook             # or do both in one go
+```
+
+It edits `~/.claude/settings.json` (honoring `CLAUDE_CONFIG_DIR`), backs the file
+up to `settings.json.taste-engine.bak` first, and is idempotent: re-running
+replaces the old entry instead of stacking a second one. Set
+`TASTE_STOP_THRESHOLD` to change the trigger count (default `2`, matching the
+promotion threshold in `profile.md`).
+
+The hook is deliberately a **nudge, not an auto-capture**. It never writes to the
+journal and never blocks a session. Recording corrections is the skill's job
+(SKILL.md section 4), and it already does that the moment you say them, so a hook
+that also wrote entries would only duplicate them and pollute the audit trail.
+`hooks/stop-nudge.example.json` has the raw snippet if you prefer to paste it by
+hand.
 
 ## Usage
 
@@ -132,7 +163,10 @@ taste-engine/
       moodboard/               drop reference images here (gitignored)
   commands/ts.md               the /ts slash command
   scripts/                     bash equivalents of the slash commands
-  hooks/                       optional Stop-hook example
+  hooks/
+    taste-stop.sh              optional Stop hook: nudges you to distill
+    install-hook.sh            adds/removes that hook in settings.json
+    stop-nudge.example.json    the same block, to paste by hand
   install.sh
 ```
 

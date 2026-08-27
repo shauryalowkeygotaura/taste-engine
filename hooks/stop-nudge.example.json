@@ -1,0 +1,16 @@
+{
+  "_comment": "OPTIONAL, and the installer does this for you: run `bash hooks/install-hook.sh` from your clone and it merges the block below into your settings.json with the real absolute path filled in. This snippet is only here if you would rather paste it by hand. Replace /absolute/path/to with the path to your clone. The hook is a nudge, not an auto-capture: it counts journal entries still marked `distilled: no` and prints one line only once there are at least TASTE_STOP_THRESHOLD (default 2) of them. Below that it prints nothing, and it never blocks the session or writes to the journal.",
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"/absolute/path/to/taste-engine/hooks/taste-stop.sh\""
+          }
+        ]
+      }
+    ]
+  }
+}

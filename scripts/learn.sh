@@ -25,4 +25,4 @@ fi
   echo "- distilled: no"
 } >> "$journal"
 
-echo "logged to $slug journal. run '/taste distill' or scripts to harden."
+echo "logged to $slug journal. run '/ts distill' or scripts to harden."

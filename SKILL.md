@@ -1,6 +1,6 @@
 ---
 name: taste-engine
-description: A self-improving, per-project design taste layer. Loads a global taste profile plus a project-specific override, ingests a moodboard of reference images into a taste-DNA, applies it to frontend/design work, then learns from your corrections and hardens recurring feedback into rules over time. Use when the user says "use my taste", "/taste", drops a moodboard, or starts frontend/design work that should match their personal aesthetic.
+description: A self-improving, per-project design taste layer. Loads a global taste profile plus a project-specific override, ingests a moodboard of reference images into a taste-DNA, applies it to frontend/design work, then learns from your corrections and hardens recurring feedback into rules over time. Use when the user says "use my taste", "/ts", drops a moodboard, or starts frontend/design work that should match their personal aesthetic.
 ---
 
 # taste-engine
@@ -28,7 +28,7 @@ clone via the `.taste-root` pointer file next to this skill).
 
 1. Read the active slug from `PROFILES_ROOT/.active`. If missing, the active slug
    is `_global`.
-2. The user can switch with `/taste use <slug>` (writes `.active`) or override for
+2. The user can switch with `/ts <slug>` (writes `.active`) or override for
    one turn with an explicit slug in the request ("build the marrow landing with
    the `marrow` taste").
 
@@ -72,7 +72,7 @@ Before building, check `PROFILES_ROOT/<slug>/moodboard/` for image files
   ask which direction, per the base skill's one-question rule. Do not average them
   into mud.
 
-Re-run this any time with `/taste moodboard`.
+Re-run this any time with `/ts mood`.
 
 ---
 
@@ -109,13 +109,13 @@ cross-project, e.g. "I never want purple gradients anywhere"):
 Do this silently and immediately. One correction, one entry. Do not wait for a
 distill run to record.
 
-You can also log manually: `/taste learn "accent should be terracotta not brass"`.
+You can also log manually: `/ts learn "accent should be terracotta not brass"`.
 
 ---
 
 ## 5. DISTILL (self-improvement)
 
-Trigger: on `/taste distill`, OR automatically when a journal accumulates
+Trigger: on `/ts distill`, OR automatically when a journal accumulates
 `DISTILL_THRESHOLD` (default 5) entries with `distilled: no`.
 
 Procedure:
@@ -134,6 +134,10 @@ Procedure:
 
 Single, isolated, never-repeated nitpicks stay in the journal and do NOT get
 promoted. Taste is the pattern, not every stray comment.
+
+If the user has installed the optional Stop hook (`hooks/install-hook.sh`), they
+get a one-line reminder at the end of a session once entries pile up. The hook
+only counts and reminds; capturing corrections is still step 4's job, done live.
 
 ---
 
