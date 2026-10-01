@@ -1,9 +1,15 @@
 #!/usr/bin/env bash
 # pull a public Pinterest board's images into a profile's moodboard
-# usage: scripts/pinterest.sh <board-url> [slug]
+# usage: scripts/pinterest.sh <board-url> [slug]   bind the board to the project, pull it
+#        scripts/pinterest.sh --refresh [slug]     re-pull the project's bound board
 #
 # Pinterest is not a second kind of taste source. It fills the SAME moodboard
 # folder, so everything downstream (vision, taste-dna, the cascade) is unchanged.
+#
+# ONE BOARD PER PROJECT. The bound URL lives in profiles/<slug>/board.url, which
+# is gitignored like moodboard-sources.md (board URLs are personal). Binding a
+# different board replaces it and says so, rather than quietly mixing two
+# boards' pins into one moodboard.
 #
 # Exit codes:
 #   0  ok
@@ -11,9 +17,20 @@
 #   2  robots.txt gate - the user has not acknowledged it. Relay and STOP.
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/lib.sh"
 
+if [[ "${1:-}" == "--refresh" ]]; then
+  slug="$(require_slug "${2:-$(active_slug)}")"
+  bound="$PROFILES/$slug/board.url"
+  if [[ ! -s "$bound" ]]; then
+    echo "error: no board bound to '$slug'. bind one: scripts/pinterest.sh <board-url> $slug" >&2
+    exit 1
+  fi
+  board_url="$(head -1 "$bound" | tr -d '\r\n')"
+  set -- "$board_url" "$slug"
+fi
+
 board_url="${1:-}"
 if [[ -z "$board_url" ]]; then
-  echo 'usage: scripts/pinterest.sh <board-url> [slug]' >&2
+  echo 'usage: scripts/pinterest.sh <board-url> [slug] | --refresh [slug]' >&2
   exit 1
 fi
 
@@ -76,6 +93,16 @@ if [[ "$code" != "200" ]]; then
   echo "       A private or renamed board has no public feed." >&2
   exit 1
 fi
+
+# Bind only after the feed proved real, so a typo never replaces a good board.
+bound="$PROFILES/$slug/board.url"
+prev=""
+if [[ -s "$bound" ]]; then prev="$(head -1 "$bound" | tr -d '\r\n')"; fi
+if [[ -n "$prev" && "$prev" != "$board_url" ]]; then
+  echo "note: '$slug' was bound to $prev - now bound to $board_url" >&2
+  echo "      pins already pulled from the old board stay in the moodboard." >&2
+fi
+printf '%s\n' "$board_url" > "$bound"
 
 # The board's own title is the one piece of design signal the feed carries that
 # the pixels do not, so it is surfaced for taste-dna.md.

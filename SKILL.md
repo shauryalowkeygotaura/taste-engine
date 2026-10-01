@@ -80,6 +80,12 @@ Pinterest is not a second kind of taste source. It is a way to FILL the same
 moodboard folder, so everything downstream (vision, taste-dna, the cascade) is
 unchanged. Never invent a separate Pinterest vocabulary or a separate DNA file.
 
+ONE BOARD PER PROJECT. `/ts pin <board-url>` binds that board to the active
+project (stored in `<slug>/board.url`, gitignored) and pulls it. `/ts pin` with no
+URL re-pulls the bound board via `scripts/pinterest.sh --refresh [slug]`. If no
+board is bound yet, ASK the user for the board URL for that project rather than
+guessing or reusing another project's board.
+
 On `/ts pin <board-url>`:
 
 1. Run `scripts/pinterest.sh <board-url> [slug]`. It reads the board's public
@@ -183,7 +189,7 @@ The slash command is `/ts`. One command, short:
 - `/ts` - status (active slug, layer counts, undistilled entries).
 - `/ts learn "<note>"` - append a correction to the journal.
 - `/ts mood` - re-ingest the active project's moodboard images.
-- `/ts pin <board-url>` - pull a public Pinterest board into the moodboard, then
+- `/ts pin [board-url]` - bind (or re-pull, with no URL) the project's ONE Pinterest board into the moodboard, then
   ingest it (section 2a).
 - `/ts distill` - harden recurring journal entries into rules now.
 

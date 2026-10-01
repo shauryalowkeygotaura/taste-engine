@@ -9,6 +9,7 @@ profiles/**/moodboard/*
 # where those images came from (Pinterest board URLs are personal). same rule as
 # the images: local only. the derived taste-dna.md is what travels.
 profiles/**/moodboard-sources.md
+profiles/**/board.url
 
 # installed skill pointer, if generated inside the repo
 .taste-root
