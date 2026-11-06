@@ -23,6 +23,12 @@ It does three things a fixed ruleset cannot:
 
 ---
 
+## Quick start
+
+```bash
+git clone https://github.com/shauryalowkeygotaura/taste-engine && cd taste-engine && bash install.sh
+```
+
 ## How it works
 
 Taste is resolved as a cascade. Later layers win only where they speak:
